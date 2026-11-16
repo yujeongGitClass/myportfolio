@@ -12,6 +12,7 @@ const modalRole = document.querySelector("#project-modal-role");
 const modalOutcome = document.querySelector("#project-modal-outcome");
 const modalTechnologies = document.querySelector("#project-modal-technologies");
 const contactForm = document.querySelector("#contact-form");
+const themeToggle = document.querySelector("#theme-toggle");
 
 const projectDetails = {
   lumio: {
@@ -39,6 +40,38 @@ const projectDetails = {
 
 if (currentYear) {
   currentYear.textContent = new Date().getFullYear();
+}
+
+if (themeToggle) {
+  const themeToggleLabel = themeToggle.querySelector(".theme-toggle-label");
+  const themeToggleIcon = themeToggle.querySelector(".theme-toggle-icon");
+
+  function applyTheme(theme, shouldPersist) {
+    const isDark = theme === "dark";
+    document.documentElement.dataset.theme = isDark ? "dark" : "light";
+    themeToggle.setAttribute("aria-pressed", String(isDark));
+
+    if (themeToggleLabel) {
+      themeToggleLabel.textContent = isDark ? "Light mode" : "Dark mode";
+    }
+    if (themeToggleIcon) {
+      themeToggleIcon.textContent = isDark ? "☀" : "☾";
+    }
+
+    if (shouldPersist) {
+      try {
+        localStorage.setItem("portfolio-theme", isDark ? "dark" : "light");
+      } catch (error) {
+        console.error("테마 설정을 저장하지 못했습니다.", error);
+      }
+    }
+  }
+
+  applyTheme(document.documentElement.dataset.theme === "dark" ? "dark" : "light", false);
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    applyTheme(nextTheme, true);
+  });
 }
 
 if (contactForm) {
